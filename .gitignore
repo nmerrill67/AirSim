@@ -384,3 +384,7 @@ build_docs/
 
 # api docs
 PythonClient/docs/_build
+
+# VIM
+*.swp
+*.swo
