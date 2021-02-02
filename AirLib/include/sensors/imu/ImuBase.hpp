@@ -23,6 +23,12 @@ public: //types
         Quaternionr orientation;
         Vector3r angular_velocity;
         Vector3r linear_acceleration;
+
+        // True noise-free data for VIO eval and similar application
+        Quaternionr gt_orientation;
+        Vector3r gt_position;
+        Vector3r gt_angular_velocity;
+        Vector3r gt_linear_acceleration;
     };
 
 

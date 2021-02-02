@@ -250,7 +250,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                     case SensorBase::SensorType::Imu:
                     {
                         std::cout << "Imu" << std::endl;
-                        sensor_publisher.publisher = nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu/" + sensor_name, 10);
+                        sensor_publisher.publisher = nh_private_.advertise<airsim_ros_pkgs::ImuWithGt>(curr_vehicle_name + "/imu/" + sensor_name, 10);
                         break;
                     }
                     case SensorBase::SensorType::Gps:
@@ -873,30 +873,45 @@ airsim_ros_pkgs::Altimeter AirsimROSWrapper::get_altimeter_msg_from_airsim(const
     return alt_msg;
 }
 
-// todo covariances
-sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data) const
+airsim_ros_pkgs::ImuWithGt AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data) const
 {
-    sensor_msgs::Imu imu_msg;
+    airsim_ros_pkgs::ImuWithGt imu_msg;
     // imu_msg.header.frame_id = "/airsim/odom_local_ned";// todo multiple drones
-    imu_msg.header.stamp = airsim_timestamp_to_ros(imu_data.time_stamp);
-    imu_msg.orientation.x = imu_data.orientation.x();
-    imu_msg.orientation.y = imu_data.orientation.y();
-    imu_msg.orientation.z = imu_data.orientation.z();
-    imu_msg.orientation.w = imu_data.orientation.w();
+    imu_msg.imu_data.header.stamp = airsim_timestamp_to_ros(imu_data.time_stamp);
+    imu_msg.imu_data.orientation.x = imu_data.orientation.x();
+    imu_msg.imu_data.orientation.y = imu_data.orientation.y();
+    imu_msg.imu_data.orientation.z = imu_data.orientation.z();
+    imu_msg.imu_data.orientation.w = imu_data.orientation.w();
 
-    // todo radians per second
-    imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
-    imu_msg.angular_velocity.y = imu_data.angular_velocity.y();
-    imu_msg.angular_velocity.z = imu_data.angular_velocity.z();
+    // radians per second
+    imu_msg.imu_data.angular_velocity.x = imu_data.angular_velocity.x();
+    imu_msg.imu_data.angular_velocity.y = imu_data.angular_velocity.y();
+    imu_msg.imu_data.angular_velocity.z = imu_data.angular_velocity.z();
 
     // meters/s2^m 
-    imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
-    imu_msg.linear_acceleration.y = imu_data.linear_acceleration.y();
-    imu_msg.linear_acceleration.z = imu_data.linear_acceleration.z();
+    imu_msg.imu_data.linear_acceleration.x = imu_data.linear_acceleration.x();
+    imu_msg.imu_data.linear_acceleration.y = imu_data.linear_acceleration.y();
+    imu_msg.imu_data.linear_acceleration.z = imu_data.linear_acceleration.z();
 
-    // imu_msg.orientation_covariance = ;
-    // imu_msg.angular_velocity_covariance = ;
-    // imu_msg.linear_acceleration_covariance = ;
+    // Set GT data ==================================================
+    imu_msg.gt_orientation.x = imu_data.gt_orientation.x();
+    imu_msg.gt_orientation.y = imu_data.gt_orientation.y();
+    imu_msg.gt_orientation.z = imu_data.gt_orientation.z();
+    imu_msg.gt_orientation.w = imu_data.gt_orientation.w();
+    
+    imu_msg.gt_position.x = imu_data.gt_position.x();
+    imu_msg.gt_position.y = imu_data.gt_position.y();
+    imu_msg.gt_position.z = imu_data.gt_position.z();
+
+    // radians per second
+    imu_msg.gt_angular_velocity.x = imu_data.gt_angular_velocity.x();
+    imu_msg.gt_angular_velocity.y = imu_data.gt_angular_velocity.y();
+    imu_msg.gt_angular_velocity.z = imu_data.gt_angular_velocity.z();
+
+    // meters/s2^m 
+    imu_msg.gt_linear_acceleration.x = imu_data.gt_linear_acceleration.x();
+    imu_msg.gt_linear_acceleration.y = imu_data.gt_linear_acceleration.y();
+    imu_msg.gt_linear_acceleration.z = imu_data.gt_linear_acceleration.z();
 
     return imu_msg;
 }
@@ -1113,8 +1128,8 @@ void AirsimROSWrapper::publish_vehicle_state()
                 case SensorBase::SensorType::Imu:
                 {
                     auto imu_data = airsim_client_->getImuData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
-                    sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-                    imu_msg.header.frame_id = vehicle_ros->vehicle_name;
+                    airsim_ros_pkgs::ImuWithGt imu_msg = get_imu_msg_from_airsim(imu_data);
+                    imu_msg.imu_data.header.frame_id = vehicle_ros->vehicle_name;
                     sensor_publisher.publisher.publish(imu_msg);
                     break;
                 }

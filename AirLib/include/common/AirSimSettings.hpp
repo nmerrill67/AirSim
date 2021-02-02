@@ -190,6 +190,7 @@ public: //types
     };
 
     struct ImuSetting : SensorSetting {
+
     };
 
     struct GpsSetting : SensorSetting {

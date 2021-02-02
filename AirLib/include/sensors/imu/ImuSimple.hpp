@@ -51,13 +51,21 @@ private: //methods
         Output output;
         const GroundTruth& ground_truth = getGroundTruth();
 
-        output.angular_velocity = ground_truth.kinematics->twist.angular;
-        output.linear_acceleration = ground_truth.kinematics->accelerations.linear - ground_truth.environment->getState().gravity;
-        output.orientation = ground_truth.kinematics->pose.orientation;
+        // Set GT data
+        output.gt_angular_velocity = ground_truth.kinematics->twist.angular;
+        output.gt_linear_acceleration = ground_truth.kinematics->accelerations.linear - ground_truth.environment->getState().gravity;
+        output.gt_orientation = ground_truth.kinematics->pose.orientation;
+        output.gt_position = ground_truth.kinematics->pose.position;
 
         //acceleration is in world frame so transform to body frame
-        output.linear_acceleration = VectorMath::transformToBodyFrame(output.linear_acceleration, 
-            ground_truth.kinematics->pose.orientation, true);
+        output.gt_linear_acceleration = VectorMath::transformToBodyFrame(
+                output.gt_linear_acceleration, 
+                ground_truth.kinematics->pose.orientation, true);
+        
+        // Copy GT to simulated noisy, and prepare for noise addition    
+        output.angular_velocity = output.gt_angular_velocity;
+        output.linear_acceleration = output.gt_linear_acceleration;
+        output.orientation = output.gt_orientation;
 
         //add noise
         addNoise(output.linear_acceleration, output.angular_velocity);

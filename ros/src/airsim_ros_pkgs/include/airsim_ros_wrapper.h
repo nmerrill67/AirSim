@@ -27,6 +27,7 @@ STRICT_MODE_ON
 #include <airsim_ros_pkgs/CarControls.h>
 #include <airsim_ros_pkgs/CarState.h>
 #include <airsim_ros_pkgs/Environment.h>
+#include <airsim_ros_pkgs/ImuWithGt.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -283,7 +284,7 @@ private:
     msr::airlib::Pose get_airlib_pose(const float& x, const float& y, const float& z, const msr::airlib::Quaternionr& airlib_quat) const;
     airsim_ros_pkgs::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
-    sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data) const;
+    airsim_ros_pkgs::ImuWithGt get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data) const;
     airsim_ros_pkgs::Altimeter get_altimeter_msg_from_airsim(const msr::airlib::BarometerBase::Output& alt_data) const;
     sensor_msgs::Range get_range_from_airsim(const msr::airlib::DistanceSensorData& dist_data) const;
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data, const std::string& vehicle_name) const;

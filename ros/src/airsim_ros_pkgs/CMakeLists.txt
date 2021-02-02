@@ -54,6 +54,7 @@ add_message_files(
   CarState.msg
   Altimeter.msg
   Environment.msg
+  ImuWithGt.msg
 )
 
 add_service_files(
@@ -71,6 +72,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   geometry_msgs
+  sensor_msgs
   geographic_msgs
 )
 
