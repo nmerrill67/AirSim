@@ -96,5 +96,9 @@
       "X": 4.0, "Y": 0.0, "Z": 0,
       "Pitch": 0, "Roll": 0, "Yaw": 0
     }
-  }
+  },
+  "SubWindows": [
+    {"WindowID": 0, "ImageType": 0, "CameraName": "cam", "Visible": true},
+    {"WindowID": 1, "ImageType": 1, "CameraName": "depth", "Visible": true}
+  ]
 }

@@ -28,6 +28,7 @@ public: //types
         Quaternionr gt_orientation;
         Vector3r gt_position;
         Vector3r gt_angular_velocity;
+        Vector3r gt_linear_velocity;
         Vector3r gt_linear_acceleration;
     };
 

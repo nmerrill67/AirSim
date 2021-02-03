@@ -64,12 +64,15 @@ void AirsimROSWrapper::initialize_airsim()
         
         if (airsim_mode_ == AIRSIM_MODE::DRONE)
         {
-            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            //airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
         }
         else
         {
-            airsim_client_ = std::move(std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_)));
+            airsim_client_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
         }
+
+        assert(airsim_client_ != nullptr);
         airsim_client_->confirmConnection();
         airsim_client_images_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
@@ -446,7 +449,6 @@ bool AirsimROSWrapper::land_all_srv_cb(airsim_ros_pkgs::Land::Request& request, 
 bool AirsimROSWrapper::reset_srv_cb(airsim_ros_pkgs::Reset::Request& request, airsim_ros_pkgs::Reset::Response& response)
 {
     std::lock_guard<std::mutex> guard(drone_control_mutex_);
-
     airsim_client_.reset();
     return true; //todo
 }
@@ -907,8 +909,13 @@ airsim_ros_pkgs::ImuWithGt AirsimROSWrapper::get_imu_msg_from_airsim(const msr::
     imu_msg.gt_angular_velocity.x = imu_data.gt_angular_velocity.x();
     imu_msg.gt_angular_velocity.y = imu_data.gt_angular_velocity.y();
     imu_msg.gt_angular_velocity.z = imu_data.gt_angular_velocity.z();
+    
+    // meters/s 
+    imu_msg.gt_linear_velocity.x = imu_data.gt_linear_velocity.x();
+    imu_msg.gt_linear_velocity.y = imu_data.gt_linear_velocity.y();
+    imu_msg.gt_linear_velocity.z = imu_data.gt_linear_velocity.z();
 
-    // meters/s2^m 
+    // meters/s^2 
     imu_msg.gt_linear_acceleration.x = imu_data.gt_linear_acceleration.x();
     imu_msg.gt_linear_acceleration.y = imu_data.gt_linear_acceleration.y();
     imu_msg.gt_linear_acceleration.z = imu_data.gt_linear_acceleration.z();
@@ -1095,6 +1102,7 @@ void AirsimROSWrapper::publish_vehicle_state()
     for (auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_)
     {
         auto& vehicle_ros = vehicle_name_ptr_pair.second;
+        //if (vehicle_ros->env_pub.getNumSubscribers() > 0) {
 
         // simulation environment truth
         vehicle_ros->env_pub.publish(vehicle_ros->env_msg);

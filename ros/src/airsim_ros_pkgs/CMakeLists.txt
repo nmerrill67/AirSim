@@ -14,6 +14,8 @@ set(CXX_EXP_LIB "-nostdinc++ -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gn
 -lm -lc -lgcc_s -lgcc  
 -lstdc++fs -fmax-errors=10 -Wnoexcept -Wstrict-null-sentinel") 
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3")
+
 set(RPC_LIB_INCLUDES " ${AIRSIM_ROOT}/external/rpclib/rpclib-2.2.1/include")
 set(RPC_LIB rpc) # name of .a file with lib prefix
 message(STATUS "found RPC_LIB_INCLUDES=${RPC_LIB_INCLUDES}")
@@ -107,6 +109,9 @@ target_link_libraries(airsim_ros ${catkin_LIBRARIES} ${OpenCV_LIBS} yaml-cpp Air
 
 add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros ${catkin_LIBRARIES} AirLib)
+
+add_executable(random_trajectory_generator src/random_trajectory_generator.cpp)
+target_link_libraries(random_trajectory_generator airsim_ros ${catkin_LIBRARIES} AirLib)
 
 add_executable(pd_position_controller_simple_node src/pd_position_controller_simple_node.cpp)
 target_link_libraries(pd_position_controller_simple_node pd_position_controller_simple airsim_ros ${catkin_LIBRARIES} AirLib)

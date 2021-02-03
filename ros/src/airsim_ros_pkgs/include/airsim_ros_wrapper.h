@@ -9,7 +9,7 @@ STRICT_MODE_ON
 #include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
-#include "ros/ros.h"
+#include <ros/ros.h>
 #include "sensors/imu/ImuBase.hpp"
 #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
@@ -328,7 +328,8 @@ private:
     bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
 
     std::string host_ip_;
-    std::unique_ptr<msr::airlib::RpcLibClientBase> airsim_client_ = nullptr;
+    //std::unique_ptr<msr::airlib::RpcLibClientBase> airsim_client_ = nullptr;
+    std::shared_ptr<msr::airlib::RpcLibClientBase> airsim_client_ = nullptr;
     // seperate busy connections to airsim, update in their own thread
     msr::airlib::RpcLibClientBase airsim_client_images_;
     msr::airlib::RpcLibClientBase airsim_client_lidar_;

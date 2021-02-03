@@ -53,6 +53,7 @@ private: //methods
 
         // Set GT data
         output.gt_angular_velocity = ground_truth.kinematics->twist.angular;
+        output.gt_linear_velocity = ground_truth.kinematics->twist.linear;
         output.gt_linear_acceleration = ground_truth.kinematics->accelerations.linear - ground_truth.environment->getState().gravity;
         output.gt_orientation = ground_truth.kinematics->pose.orientation;
         output.gt_position = ground_truth.kinematics->pose.position;
