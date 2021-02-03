@@ -58,7 +58,8 @@ public:
     {
         position.x() = rand_xy_.next();
         position.y() = rand_xy_.next();
-        position.z() = Utils::clip(rand_z_.next(), -10.0f, -1.0f);
+        //position.z() = Utils::clip(rand_z_.next(), -10.0f, -1.0f);
+        position.z() = rand_z_.next();
         yaw = Utils::clip(rand_yaw_.next(), -M_PIf, M_PIf);
     }
 private:
@@ -99,7 +100,7 @@ public:
         // https://github.com/microsoft/AirSim/blob/master/docs/airsim_ros_pkgs.md
         // vehicle_name is skipped in pd_controller_simple.cpp
         position_client = nh.serviceClient<airsim_ros_pkgs::SetLocalPosition>(
-                "/airsim_node/local_position_goal");
+                "/airsim_node/local_position_goal/override");
     }
 
     // Takeoff, generate the full trajectory, land
@@ -134,13 +135,10 @@ public:
         // Fly around to random waypoints
         clock_t t0 = clock();
         while ((double)(clock()-t0)/CLOCKS_PER_SEC < runtime_seconds) {
-            if (move_to_next_random()) {
-                ROS_INFO("Waypoint successfully reached.\n");
-            } else {
-                ROS_WARN("Waypoint could not be reached!\n");
-            }
+            move_to_next_random();
+            sleep(5);
         }
-
+        
         // Land
         ROS_INFO("Time is up! Requesting %s land...\n", vehicle_name.c_str());
         airsim_ros_pkgs::Land land_srv;
@@ -151,7 +149,7 @@ public:
         } else {
             ROS_ERROR("ERROR: Failed to land! Exiting...\n\n");
             exit(EXIT_FAILURE);
-        }   
+        } 
     }
         
 protected:

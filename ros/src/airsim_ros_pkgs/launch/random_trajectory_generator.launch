@@ -8,8 +8,8 @@
     <node name="random_trajectory_generator" pkg="airsim_ros_pkgs" type="random_trajectory_generator" output="screen">   
 		<param name="runtime_seconds" type="double" value="60.0" /> 
 		<param name="vehicle_name"    type="string" value="drone_1" /> 
-		<param name="std_xy"          type="double" value="75.0" /> 
-		<param name="mean_z"          type="double" value="1.0" /> 
+		<param name="std_xy"          type="double" value="66.0" /> 
+		<param name="mean_z"          type="double" value="-10.0" /> 
 		<param name="std_z"           type="double" value="2.0" /> 
 		<param name="std_yaw"         type="double" value="1.5707963267948966" /> 
 		<param name="seed"            type="int"    value="0" /> 

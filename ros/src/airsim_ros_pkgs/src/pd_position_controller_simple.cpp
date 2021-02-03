@@ -58,7 +58,7 @@ void PIDPositionController::initialize_ros()
     nh_private_.getParam("update_control_every_n_sec", update_control_every_n_sec);
 
     // ROS publishers
-    airsim_vel_cmd_world_frame_pub_ = nh_private_.advertise<airsim_ros_pkgs::VelCmd>("/vel_cmd_world_frame", 1);
+    airsim_vel_cmd_world_frame_pub_ = nh_private_.advertise<airsim_ros_pkgs::VelCmd>("/airsim_node/drone_1/vel_cmd_world_frame", 1);
     
     std::string odom_topic = "/airsim_node/drone_1/odom_local_ned";
     std::string origin_topic = "/airsim_node/origin_geo_point";
@@ -105,7 +105,7 @@ void PIDPositionController::check_reached_goal()
 bool PIDPositionController::local_position_goal_srv_cb(airsim_ros_pkgs::SetLocalPosition::Request& request, airsim_ros_pkgs::SetLocalPosition::Response& response)
 {
     // this tells the update timer callback to not do active hovering 
-    if(!got_goal_once_)
+    if (!got_goal_once_)
         got_goal_once_ = true;
 
     if (has_goal_ && !reached_goal_)
@@ -286,7 +286,11 @@ void PIDPositionController::update_control_cmd_timer_cb(const ros::TimerEvent& e
         }
         else
         {
-            ROS_INFO_STREAM("[PIDPositionController] Moving to goal.");
+            ROS_INFO("[PIDPositionController] Moving to goal (%.3f,%.3f,%.3f,%.3f) "
+                    "from current position (%.3f,%.3f,%.3f,%.3f) (x y z yaw)\n",
+                    target_position_.x, target_position_.y, target_position_.z,
+                    target_position_.yaw, curr_position_.x, curr_position_.y, 
+                    curr_position_.z, curr_position_.yaw);
         }
     }
 
