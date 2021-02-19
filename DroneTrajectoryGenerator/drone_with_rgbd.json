@@ -1,0 +1,54 @@
+{
+  "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/master/docs/settings.md",
+  "SettingsVersion": 1.2,
+  "SimMode": "Multirotor",
+  "ViewMode": "SpringArmChase",
+  "ClockSpeed": 1.0,
+  "Vehicles": {
+    "drone_1": {
+      "VehicleType": "SimpleFlight",
+      "DefaultVehicleState": "Armed",
+      "EnableCollisionPassthrogh": false,
+      "EnableCollisions": true,
+      "AllowAPIAlways": true,
+      "RC": {
+        "RemoteControlID": 0,
+        "AllowAPIWhenDisconnected": false
+      },
+      "Cameras": {
+        "cam0": {
+          "CaptureSettings": [
+            {
+              "PublishToRos": 1,
+              "ImageType": 0,
+              "Width": 320,
+              "Height": 240,
+              "FOV_Degrees": 130,
+              "DepthOfFieldFstop": 2.8,
+              "DepthOfFieldFocalDistance": 200.0, 
+              "DepthOfFieldFocalRegion": 200.0,
+              "TargetGamma": 1.5
+            },
+            {
+              "PublishToRos": 1,
+              "ImageType": 1,
+              "Width": 320,
+              "Height": 240,
+              "FOV_Degrees": 130,
+              "DepthOfFieldFstop": 2.8,
+              "DepthOfFieldFocalDistance": 200.0, 
+              "DepthOfFieldFocalRegion": 200.0,
+              "TargetGamma": 1.5
+            }
+          ],
+          "X": 0.50, "Y": -0.06, "Z": 0.50,
+          "Pitch": -15, "Roll": 0, "Yaw": 0
+        }
+      }
+    }
+  },
+   "SubWindows": [
+    {"WindowID": 0, "CameraID": 0, "ImageType": 0, "Visible": true},
+    {"WindowID": 2, "CameraID": 0, "ImageType": 3, "Visible": true}	
+  ] 
+}
